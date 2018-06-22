@@ -1,0 +1,71 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: Administrator
+ * Date: 2018/6/21
+ * Time: 19:29
+ */
+
+namespace Scourgen\WebBundle\Entity;
+use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\OneToOne;
+use Doctrine\ORM\Mapping\JoinColumn;
+
+/**
+ * @ORM\Entity(repositoryClass="ProfileRepository")
+ * @ORM\Table(name="profile")
+ *
+ */
+class profile{
+
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    protected $id;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    protected $mobile_name;
+
+    /**
+     * @OneToOne(targetEntity="user",inversedBy="profile")
+     * @JoinColumn(name="user_id",referencedColumnName="id")
+     */
+    protected $user;
+
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set mobile_name
+     *
+     * @param integer $mobileName
+     * @return profile
+     */
+    public function setMobileName($mobileName)
+    {
+        $this->mobile_name = $mobileName;
+
+        return $this;
+    }
+
+    /**
+     * Get mobile_name
+     *
+     * @return integer 
+     */
+    public function getMobileName()
+    {
+        return $this->mobile_name;
+    }
+}
