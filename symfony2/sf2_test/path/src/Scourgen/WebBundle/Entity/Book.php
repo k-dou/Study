@@ -1,0 +1,288 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: Administrator
+ * Date: 2018/6/22
+ * Time: 14:56
+ */
+
+namespace Scourgen\WebBundle\Entity;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\ManyToMany;
+use Doctrine\ORM\Mapping\ManyToOne;
+use Doctrine\ORM\Mapping\JoinTable;
+use Doctrine\ORM\Mapping\JoinColumn;
+
+/**
+ * @ORM\Entity(repositoryClass="BookRepository")
+ * @ORM\Table(name="book")
+ * @ORM\HasLifecycleCallbacks();
+ *
+ */
+class Book{
+
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    protected $id;
+
+    /**
+     * @ORM\Column(type="string")
+     */
+    protected $tittle;
+
+    /**
+     * @ORM\Column(type="float")
+     */
+    protected $price;
+
+    /**
+     * @ManyToMany(targetEntity="User",inversedBy="books")
+     * @JoinTable(name="users_books")
+     */
+    protected $users;
+
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    protected $createdAt;
+
+
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    protected $updatedAt;
+
+
+    /**
+     * @ManyToOne(targetEntity="Author",inversedBy="books")
+     * @JoinColumn(name="author_id",referencedColumnName="id")
+     */
+    protected $author;
+
+    /**
+     * @ManyToMany(targetEntity="Category",inversedBy="books")
+     * @JoinTable(name="categories_books")
+     */
+    private $categories;
+
+    public function __construct($title,$price){
+        $this->setTittle($title);
+        $this->setPrice($price);
+        $this->books = new ArrayCollection();
+        $this->categories = new ArrayCollection();
+    }
+
+
+
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set tittle
+     *
+     * @param string $tittle
+     * @return Book
+     */
+    public function setTittle($tittle)
+    {
+        $this->tittle = $tittle;
+
+        return $this;
+    }
+
+    /**
+     * Get tittle
+     *
+     * @return string 
+     */
+    public function getTittle()
+    {
+        return $this->tittle;
+    }
+
+    /**
+     * Set price
+     *
+     * @param float $price
+     * @return Book
+     */
+    public function setPrice($price)
+    {
+        $this->price = $price;
+
+        return $this;
+    }
+
+    /**
+     * Get price
+     *
+     * @return float 
+     */
+    public function getPrice()
+    {
+        return $this->price;
+    }
+
+    /**
+     * Add users
+     *
+     * @param \Scourgen\WebBundle\Entity\User $users
+     * @return Book
+     */
+    public function addUser(\Scourgen\WebBundle\Entity\User $users)
+    {
+        $this->users[] = $users;
+
+        return $this;
+    }
+
+    /**
+     * Remove users
+     *
+     * @param \Scourgen\WebBundle\Entity\User $users
+     */
+    public function removeUser(\Scourgen\WebBundle\Entity\User $users)
+    {
+        $this->users->removeElement($users);
+    }
+
+    /**
+     * Get users
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getUsers()
+    {
+        return $this->users;
+    }
+
+    /**
+     * Set author
+     *
+     * @param \Scourgen\WebBundle\Entity\Author $author
+     * @return Book
+     */
+    public function setAuthor(\Scourgen\WebBundle\Entity\Author $author = null)
+    {
+        $this->author = $author;
+
+        return $this;
+    }
+
+    /**
+     * Get author
+     *
+     * @return \Scourgen\WebBundle\Entity\Author 
+     */
+    public function getAuthor()
+    {
+        return $this->author;
+    }
+
+    /**
+     * Add categories
+     *
+     * @param \Scourgen\WebBundle\Entity\Category $categories
+     * @return Book
+     */
+    public function addCategory(\Scourgen\WebBundle\Entity\Category $categories)
+    {
+        $this->categories[] = $categories;
+
+        return $this;
+    }
+
+    /**
+     * Remove categories
+     *
+     * @param \Scourgen\WebBundle\Entity\Category $categories
+     */
+    public function removeCategory(\Scourgen\WebBundle\Entity\Category $categories)
+    {
+        $this->categories->removeElement($categories);
+    }
+
+    /**
+     * Get categories
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getCategories()
+    {
+        return $this->categories;
+    }
+
+    /**
+     * Set createdAt
+     *
+     * @param \DateTime $createdAt
+     * @return Book
+     */
+    public function setCreatedAt($createdAt)
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    /**
+     * Get createdAt
+     *
+     * @return \DateTime 
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * Set updatedAt
+     *
+     * @param \DateTime $updatedAt
+     * @return Book
+     */
+    public function setUpdatedAt($updatedAt)
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    /**
+     * Get updatedAt
+     *
+     * @return \DateTime 
+     */
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
+    }
+
+    /**
+     * @ORM\PrePersist()
+     */
+    public function PrePersist(){
+        if($this->getCreatedAt() == null){
+            $this->setCreatedAt(new \DateTime( 'now'));
+        }
+        $this->setUpdatedAt(new \DateTime('now'));
+    }
+
+    /**
+     * @ORM\PreUpdate()
+     */
+    public function PreUpdate(){
+        $this->setUpdatedAt(new \DateTime('now'));
+    }
+}

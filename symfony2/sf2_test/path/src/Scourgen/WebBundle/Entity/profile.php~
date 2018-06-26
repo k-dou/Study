@@ -28,10 +28,10 @@ class profile{
     /**
      * @ORM\Column(type="integer")
      */
-    protected $mobile_name;
+    protected $mobile_number;
 
     /**
-     * @OneToOne(targetEntity="user",inversedBy="profile")
+     * @OneToOne(targetEntity="User",inversedBy="profile")
      * @JoinColumn(name="user_id",referencedColumnName="id")
      */
     protected $user;
@@ -67,5 +67,28 @@ class profile{
     public function getMobileName()
     {
         return $this->mobile_name;
+    }
+
+    /**
+     * Set user
+     *
+     * @param \Scourgen\WebBundle\Entity\user $user
+     * @return profile
+     */
+    public function setUser(\Scourgen\WebBundle\Entity\user $user = null)
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * Get user
+     *
+     * @return \Scourgen\WebBundle\Entity\user 
+     */
+    public function getUser()
+    {
+        return $this->user;
     }
 }

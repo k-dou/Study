@@ -9,13 +9,13 @@
 namespace Scourgen\WebBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\OneToOne;
-
+use Doctrine\ORM\Mapping\ManyToMany;
 /**
  * @ORM\Entity(repositoryClass="UserRepository")
  * @ORM\Table(name="user")
  *
  */
-class user{
+class User{
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -43,6 +43,11 @@ class user{
      * @OneToONe(targetEntity="profile",mappedBy="user")
      */
     protected $profile;
+
+    /**
+     * @ManyToMany(targetEntity="Book",mappedBy="users")
+     */
+    private $books;
 
     /**
      * Get id
@@ -144,5 +149,28 @@ class user{
     public function getAge()
     {
         return $this->age;
+    }
+
+    /**
+     * Set profile
+     *
+     * @param \Scourgen\WebBundle\Entity\profile $profile
+     * @return user
+     */
+    public function setProfile(\Scourgen\WebBundle\Entity\profile $profile = null)
+    {
+        $this->profile = $profile;
+
+        return $this;
+    }
+
+    /**
+     * Get profile
+     *
+     * @return \Scourgen\WebBundle\Entity\profile 
+     */
+    public function getProfile()
+    {
+        return $this->profile;
     }
 }
